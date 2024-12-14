@@ -1,8 +1,5 @@
-import Professor from "../models/ProfessorModel";
-const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
-
-dotenv.config();
+import Professor from "../models/ProfessorModel.js";
+import bcrypt from "bcrypt";
 
 export async function registerProfessor(req, res) {
     try {

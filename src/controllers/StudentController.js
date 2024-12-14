@@ -1,7 +1,7 @@
-import Student from "../models/StudentModel";
+import Student from "../models/StudentModel.js";
 import jwt from 'jsonwebtoken';
-const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
+import bcrypt from "bcrypt";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ export async function registerStudent(req, res) {
         const studentExists = await Student.findOne({ roll_no });
 
         if (studentExists) 
-            return res.status(400).json({ message: "Already registered" });
+            return res.status(400).send("Already registered");
         
         const hashedPassword = await bcrypt.hash(password, 10);
         const student = new Student({

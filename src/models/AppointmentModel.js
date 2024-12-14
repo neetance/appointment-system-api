@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema({
     professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor', required: true },

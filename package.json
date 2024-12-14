@@ -1,6 +1,7 @@
 {
   "name": "appointment-system-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend API for a college appointment system",
   "main": "index.js",
   "scripts": {
