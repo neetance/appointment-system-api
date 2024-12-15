@@ -1,9 +1,10 @@
 import Professor from "../models/ProfessorModel.js";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
 
 export async function registerProfessor(req, res) {
     try {
-        const {name, professor_Id, email, password, department, phone} = req.body;
+        const {name, professor_Id, email, password, department} = req.body;
         const professorExists = await Professor.findOne({ professor_Id });
 
         if (professorExists) 
@@ -15,8 +16,7 @@ export async function registerProfessor(req, res) {
             professor_Id,
             email,
             password: hashedPassword,
-            department,
-            phone
+            department
         });
         await professor.save();
 
@@ -67,11 +67,10 @@ export async function updateProfessor(req, res) {
         if (!professor) 
             return res.status(400).send("Invalid professor ID");
 
-        const { name, email, department, phone } = req.body;
+        const { name, email, department } = req.body;
         if (name) professor.name = name;
         if (email) professor.email = email;
         if (department) professor.department = department;
-        if (phone) professor.phone = phone;
 
         await professor.save();
         res.status(200).send("Updated successfully");
@@ -88,7 +87,7 @@ export async function deleteProfessor(req, res) {
         if (!professor) 
             return res.status(400).send("Invalid professor ID");
 
-        await professor.delete();
+        await professor.deleteOne();
         res.status(200).send("Deleted successfully");
     }
     catch (err) {

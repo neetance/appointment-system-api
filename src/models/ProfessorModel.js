@@ -5,8 +5,7 @@ const professorSchema = new mongoose.Schema({
     professor_Id: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    department: { type: String, required: true },
-    phone: { type: String, required: false, unique: true }
+    department: { type: String, required: true }
 });
 
 const Professor = mongoose.model('Professor', professorSchema);

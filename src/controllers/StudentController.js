@@ -21,7 +21,7 @@ export function authenticateToken(req, res, next) {
 
 export async function registerStudent(req, res) {
     try {
-        const {roll_no, name, email, password, branch, phone} = req.body;
+        const {roll_no, name, email, password, branch} = req.body;
         const studentExists = await Student.findOne({ roll_no });
 
         if (studentExists) 
@@ -33,8 +33,7 @@ export async function registerStudent(req, res) {
             name,
             email,
             password: hashedPassword,
-            branch,
-            phone
+            branch
         });
         await student.save();
 
@@ -87,11 +86,10 @@ export async function updateStudent(req, res) {
         if (!student)
             return res.status(404).send("Invalid roll number");
 
-        const { name, email, branch, phone } = req.body;
+        const { name, email, branch } = req.body;
         if (name) student.name = name;
         if (email) student.email = email;
         if (branch) student.branch = branch;
-        if (phone) student.phone = phone;
 
         await student.save();
         res.status(200).send("Updated successfully");
@@ -109,7 +107,7 @@ export async function deleteStudent(req, res) {
         if (!student)
             return res.status(404).send("Invalid roll number");
 
-        await student.delete();
+        await student.deleteOne();
         res.status(200).send("Deleted successfully");
     }
     catch (err) {

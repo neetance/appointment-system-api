@@ -1,6 +1,7 @@
-import {Appointment} from '../models/Appointment';
-import {Professor} from '../models/Professor';
-import {Student} from '../models/Student';
+import Appointment from '../models/AppointmentModel.js';
+import Student from '../models/StudentModel.js';
+import Professor from '../models/ProfessorModel.js';
+import { sendMail } from '../mailer.js';
 
 export async function addTimeSlot(req, res) {
     try {
@@ -56,6 +57,15 @@ export async function bookAppointment(req, res) {
         appointment.student = student._id;
 
         await appointment.save();
+
+        const professor = await Professor.findOne({ _id: appointment.professor });
+        const subject = "Appointment Booked";
+        const textProfMail = `Your appointment has been booked by ${student.name} on ${appointment.date}`;
+        sendMail(professor.email, subject, textProfMail);
+
+        const textStudentMail = `Your appointment with ${professor.name} has been booked on ${appointment.date}`;
+        sendMail(student.email, subject, textStudentMail);
+        
         res.status(200).send("Appointment booked successfully");
     }
     catch (err) {
@@ -83,6 +93,15 @@ export async function studentCancelAppointment(req, res) {
         appointment.student = null;
 
         await appointment.save();
+
+        const professor = await Professor.findOne({ _id: appointment.professor });
+        const subject = "Appointment Cancelled";
+        const textProfMail = `Your appointment has been cancelled by ${student.name} on ${appointment.date}. This time slot is now free`;
+        sendMail(professor.email, subject, textProfMail);
+
+        const textStudentMail = `Your appointment with ${professor.name} on ${appointment.date} has been cancelled`;
+        sendMail(student.email, subject, textStudentMail);
+
         res.status(200).send("Appointment cancelled successfully");
     }
     catch (err) {
@@ -108,7 +127,16 @@ export async function professorCancelAppointment(req, res) {
         if (appointment.professor.toString() !== professor._id.toString())
             return res.status(400).send("Appointment not booked by you");
 
-        await appointment.delete();
+        await appointment.deleteOne();
+
+        const student = await Student.findOne({ _id: appointment.student });
+        const subject = "Appointment Cancelled";
+        const textProfMail = `Your appointment with ${student.name} on ${appointment.date} has been cancelled`;
+        sendMail(professor.email, subject, textProfMail);
+
+        const textStudentMail = `Your appointment with ${professor.name} on ${appointment.date} has been cancelled by the them.`;
+        sendMail(student.email, subject, textStudentMail);
+        
         res.status(200).send("Appointment cancelled successfully");
     }
     catch (err) {
