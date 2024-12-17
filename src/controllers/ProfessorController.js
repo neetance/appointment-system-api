@@ -2,6 +2,10 @@ import Professor from "../models/ProfessorModel.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 
+/**
+ * @dev Used to register a professor
+ */
+
 export async function registerProfessor(req, res) {
     try {
         const {name, professor_Id, email, password, department} = req.body;
@@ -20,12 +24,24 @@ export async function registerProfessor(req, res) {
         });
         await professor.save();
 
-        res.status(201).send("Registered successfully");
+        res.status(201).json({
+            mesage: "Registered successfully",
+            body: {
+                name: professor.name,
+                professor_Id: professor.professor_Id,
+                email: professor.email,
+                department: professor.department
+            }
+        });
     }
     catch (err) {
         res.status(500).send(`error: ${err}`);
     }
 }
+
+/** 
+ * @dev Used to login a professor
+ */
 
 export async function loginProfessor(req, res) {
     try {
@@ -46,6 +62,11 @@ export async function loginProfessor(req, res) {
     }
 }
 
+/**
+ * @dev Used to get the details of a professor
+ * NOTE Requires authentication(can only be accessed by the professor)
+ */
+
 export async function getProfessorDetails(req, res) {
     try {
         const professor_Id = req.user.professor_Id;
@@ -53,12 +74,22 @@ export async function getProfessorDetails(req, res) {
         if (!professor) 
             return res.status(400).send("Invalid professor ID");
 
-        res.status(200).json(professor);
+        res.status(200).json({
+            name: professor.name,
+            professor_Id: professor.professor_Id,
+            email: professor.email,
+            department: professor.department
+        });
     }
     catch (err) {
         res.status(500).send(`error: ${err}`);
     }
 }
+
+/**
+ * @dev Used to update the details of a professor
+ * NOTE Requires authentication(can only be accessed by the professor)
+ */
 
 export async function updateProfessor(req, res) {
     try {
@@ -80,6 +111,11 @@ export async function updateProfessor(req, res) {
     }
 }
 
+/**
+ * @dev Used to delete a professor
+ * NOTE Requires authentication(can only be accessed by the professor)
+ */
+
 export async function deleteProfessor(req, res) {
     try {
         const professor_Id = req.user.professor_Id;
@@ -94,6 +130,10 @@ export async function deleteProfessor(req, res) {
         res.status(500).send(`error: ${err}`);
     }
 }
+
+/**
+ * @dev Used to list the details of all professors
+ */
 
 export async function getAllProfessors(req, res) {
     try {

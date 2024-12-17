@@ -4,14 +4,14 @@ import { getStudentAppointments, bookAppointment, studentCancelAppointment } fro
 
 const router = express.Router();
 
-router.post('/register', registerStudent)
-router.post('/login', loginStudent)
-router.get('/details', authenticateToken, getStudentDetails)
-router.get('/', getAllStudents)
-router.patch('/update', authenticateToken, updateStudent)
-router.delete('/delete', authenticateToken, deleteStudent)
-router.get('/appointments', authenticateToken, getStudentAppointments)
-router.post('/appointments', authenticateToken, bookAppointment)
-router.delete('/appointments', authenticateToken, studentCancelAppointment)
+router.post('/register', registerStudent) // Register a student
+router.post('/login', loginStudent) // Login a student
+router.get('/details', authenticateToken, getStudentDetails) // Get details of a student
+router.get('/', getAllStudents) // List all students
+router.patch('/update', authenticateToken, updateStudent) // Update student details
+router.delete('/delete', authenticateToken, deleteStudent) // Delete a student
+router.get('/appointments', authenticateToken, getStudentAppointments) // Get all pending appointments of a student
+router.post('/appointments', authenticateToken, bookAppointment) // Book an appointment with a professor
+router.delete('/appointments', authenticateToken, studentCancelAppointment) // Cancel an appointment with a professor
 
 export default router;
